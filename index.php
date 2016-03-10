@@ -3,6 +3,8 @@
 	include ("ajax_track.php");
 	$lat_lon = GetDefaultPoint($patrolID);
 	
+	//Server Changes 
+	
 ?>
 <html>
 <head>
