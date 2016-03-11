@@ -54,8 +54,7 @@
 
 
 	$(document).ready (function () {
-		 LoadMap (<?php echo $lat_lon ; ?>); //## SET MAP ON DEFAULT LAT-LON
-		 markerArray = new Array();
+		 LoadMap (<?php echo $lat_lon ; ?>); //## SET MAP ON DEFAULT LAT-LON		 
 	});
 
 		function LoadMap(lat,lon)
@@ -71,21 +70,26 @@
 		function addMarker(title, x, y,gpsDate,use_marker) {
 						
 			var m_image ;
+			/*
 			if(use_marker=="S")
 				m_image = marker_start;
 			else if (use_marker=="E")
 				m_image = marker_end;
 			else
 				m_image = marker_dot;
-			
+			*/
 			var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(x, y),
 				map: map,
-				icon: m_image,
+				icon: marker_end,
 				title: title
 			});
 			
+			marker.addListener('click', function() {
+				infowindow.open(map, marker);
+			});
 			
+			// alert(markerArray.length);
 			//##Previous Marker 
 			if(markerArray.length==1)
 				markerArray[0].setIcon(marker_start);
@@ -95,12 +99,11 @@
 			var infowindow = new google.maps.InfoWindow({
 				content: gpsDate
 			});
-
-			marker.addListener('click', function() {
-				infowindow.open(map, marker);
-			});
 			
-			return marker;
+			//## Add Marker to array 
+			markerArray[markerArray.length] = marker; 
+			
+			
 		}
 		
 		function DrawLine()
@@ -144,9 +147,9 @@
 						else 
 							use_marker = "D";
 						
-						markerArray[markerArray.length] = addMarker('marker',latitude,longitude,gpsDate,use_marker );
+						addMarker('marker',latitude,longitude,gpsDate,use_marker );
 						path.push(new google.maps.LatLng(parseFloat(latitude), parseFloat(longitude)));
-						// alert ("marker length: "+markerArray.length);
+						
 					}				
 				},       
 				complete: function() {

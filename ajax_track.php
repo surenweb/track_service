@@ -1,7 +1,7 @@
 <?php
 	include ("website.class.php");
 
-	$task=isset($_POST['task'])? $_POST['task'] : "" ;
+	$task=isset($_POST['task'])? $_POST['task'] : "0" ;
 
 	if($task=='GetTrack')
 	{
@@ -11,10 +11,15 @@
 		$website=new website; $db=$website->connect(); $website=null; 
 		
 		//Process Dump Patrols 
-		$sql = "select RID,Lat,Lon,GpsDate,UploadTime from patrol_track 
-				where PatrolID =$patrolID and UploadTime>'$syncDate' order by UploadTime ";
+		$sql = "select RID,Lat,Lon,GpsDate,UploadDate from patrol_track 
+				where GpsDate>'$syncDate' ";
 		
-		//$sql = $sql. " LIMIT 3 ";
+		if($patrolID>-1)
+			$sql = " AND PatrolID =$patrolID ";
+		
+		$sql .= " order by GpsDate ";
+		
+		// $sql = $sql. " LIMIT 2 ";
 		$stmt=$db->prepare($sql);
 		$data = $stmt->execute();
 		$result=$stmt->fetchAll();
@@ -22,7 +27,7 @@
 		$latLonStr ="";	
 		foreach ($result as $row)
 		{
-			$syncDate = $row['UploadTime']; // For Sync Date 		
+			$syncDate = $row['GpsDate']; // For Sync Date 		
 			$latLonStr .= ";".$row['Lat'].",".$row['Lon'].",".$row['GpsDate'];
 		}
 		echo $syncDate.$latLonStr;
