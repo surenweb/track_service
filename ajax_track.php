@@ -15,7 +15,7 @@
 				where GpsDate>'$syncDate' ";
 		
 		if($patrolID>-1)
-			$sql = " AND PatrolID =$patrolID ";
+			$sql .= " AND PatrolID =$patrolID ";
 		
 		$sql .= " order by GpsDate ";
 		
