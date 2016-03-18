@@ -81,6 +81,72 @@
 		
 	}
 	
+	if($task=="register")
+	{			
+		$staffID = isset($_POST['staffID'])? $_POST['staffID'] : "";
+		$phoneNo = isset($_POST['phoneNo'])? $_POST['phoneNo'] : "";
+		$eMail = isset($_POST['eMail'])? $_POST['eMail'] : "";
+		
+		if(!($staffID>0) || strlen($phoneNo)<5 || strlen($eMail)<4 )
+				die("0:invalid data");
+		
+		
+		
+		$sql = " INSERT INTO mobile (StaffID,PhoneNo,Email) ".
+				" VALUES (".$staffID.",'".$phoneNo."','".$eMail."')";
+				
+		$stmt=$db->prepare($sql);
+		$op = $stmt->execute();		
+		if($op)
+		{	
+			$sql = " Select ID FROM mobile WHERE StaffID= '".$staffID."' ORDER BY ID DESC LIMIT 1 ";				
+			$stmt=$db->prepare($sql);
+			$data = $stmt->execute();
+			$row=$stmt->fetch(PDO::FETCH_ASSOC);
+			if($row[0]>0)
+			{	
+				echo $row[0].": Mobile ID Created ."; 
+			}
+			else
+			{	
+				echo "0: Mobile Id can't fetch from server (created).";				
+			}	
+						
+		}
+		else
+		{	
+			echo "0: Unable to insert data.";
+			KeepLog($sql);			
+		}	
+		
+		
+	}
+	
+	if($task=="register_verify")
+	{			
+		$staffID = isset($_POST['staffID'])? $_POST['staffID'] : "";
+		$mobileID = isset($_POST['mobileID'])? $_POST['mobileID'] : "";
+				
+		if(!($staffID>0) || !($mobileID>0)  )
+				die("0:invalid data");
+		
+		$sql = " Select IsActive FROM mobile WHERE ID= '".$mobileID."')";
+				
+		$stmt=$db->prepare($sql);
+		$data = $stmt->execute();
+		$row=$stmt->fetch(PDO::FETCH_ASSOC);
+		
+		if($row[0]==1)
+		{	echo "1: Verified in database ."; 
+		}
+		else
+		{	
+			echo "0: mobile not verified .";				
+		}	
+		
+		
+	}
+	
 	//KEEP Un-Successful Queries in log 
 	function KeepLog($strQuery)
 	{
