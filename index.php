@@ -61,7 +61,7 @@
 		{
 			var myLatlng = new google.maps.LatLng(lat,lon);
 			var mapOptions = {
-				zoom: 16,
+				zoom: 14,
 				center: myLatlng
 			}
 			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);   
