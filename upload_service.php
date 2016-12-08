@@ -1,5 +1,5 @@
 <?php
-	include ("website.class.php");
+	include ("class/website.class.php");
 
 	$task=isset($_POST['task'])? $_POST['task'] : "" ;
 	$data=isset($_POST['data'])? $_POST['data'] : "" ;
@@ -103,13 +103,13 @@
 			$stmt=$db->prepare($sql);
 			$data = $stmt->execute();
 			$row=$stmt->fetch(PDO::FETCH_ASSOC);
-			if($row[0]>0)
+			if($row["ID"]>0)
 			{	
-				echo $row[0].": Mobile ID Created ."; 
+				echo $row["ID"].": Mobile ID Created ."; 
 			}
 			else
 			{	
-				echo "0: Mobile Id can't fetch from server (created).";				
+				echo "0: Mobile Id can't fetch from server (created).SQL : ".$sql ;				
 			}	
 						
 		}
@@ -130,18 +130,18 @@
 		if(!($staffID>0) || !($mobileID>0)  )
 				die("0:invalid data");
 		
-		$sql = " Select IsActive FROM mobile WHERE ID= '".$mobileID."')";
+		$sql = " Select IsActive FROM mobile WHERE ID= '".$mobileID."' ";
 				
 		$stmt=$db->prepare($sql);
 		$data = $stmt->execute();
 		$row=$stmt->fetch(PDO::FETCH_ASSOC);
 		
-		if($row[0]==1)
+		if($row["IsActive"]==1)
 		{	echo "1: Verified in database ."; 
 		}
 		else
 		{	
-			echo "0: mobile not verified .";				
+			echo "0: mobile not verified .".$sql;				
 		}	
 		
 		
